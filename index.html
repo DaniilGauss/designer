@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>DANIIL GAUSS — Visual & UI Design</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg-main: #050609;
+      --bg-alt: #101118;
+      --text-main: #f5f5f5;
+      --text-muted: #9a9eaa;
+      --accent: #f2d271;
+      --accent-soft: rgba(242, 210, 113, 0.12);
+      --scroll-f: 0;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg-main);
+      color: var(--text-main);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .page {
+      position: relative;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at top, #20212a 0, #050609 55%),
+        radial-gradient(circle at bottom, #181927 0, rgba(0,0,0,0.96) 60%);
+      overflow: hidden;
+    }
+
+    /* текстура + параллакс */
+    .page::before {
+      content: "";
+      position: absolute;
+      inset: -40px;
+      pointer-events: none;
+      background:
+        repeating-linear-gradient(
+          45deg,
+          rgba(255,255,255,0.018) 0,
+          rgba(255,255,255,0.018) 1px,
+          transparent 1px,
+          transparent 7px
+        );
+      opacity: 0.35;
+      mix-blend-mode: soft-light;
+      z-index: 0;
+      transform: translate3d(0, calc(var(--scroll-f) * -14px), 0);
+      transition: transform 0.1s linear;
+      will-change: transform;
+    }
+
+    .page::after {
+      content: "";
+      position: absolute;
+      inset: 60px 40px;
+      border-radius: 32px;
+      border: 1px solid rgba(255,255,255,0.03);
+      box-shadow:
+        0 0 0 1px rgba(0,0,0,0.7),
+        0 0 40px rgba(0,0,0,0.8);
+      pointer-events: none;
+      z-index: 0;
+      transform: translate3d(0, calc(var(--scroll-f) * 6px), 0);
+      transition: transform 0.1s linear;
+      will-change: transform;
+    }
+
+    .page-micro {
+      position: fixed;
+      z-index: 10;
+      font-size: 9px;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: rgba(154,158,170,0.55);
+      pointer-events: none;
+      white-space: nowrap;
+    }
+    .page-micro--tl { left: 22px; bottom: 18px; }
+    .page-micro--tr { right: 22px; top: 18px; }
+
+    /* HERO */
+
+    .hero {
+      position: relative;
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 64px 40px 80px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      z-index: 1;
+    }
+
+    .hero-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      gap: 16px;
+    }
+
+    .hero-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo-dot {
+      width: 11px;
+      height: 11px;
+      border-radius: 999px;
+      border: 1px solid var(--accent);
+      box-shadow: 0 0 0 1px rgba(242, 210, 113, 0.22);
+      background: radial-gradient(circle, rgba(242,210,113,0.7) 0, transparent 55%);
+    }
+
+    .hero-chip {
+      padding: 6px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(14px);
+      text-transform: uppercase;
+      font-size: 11px;
+      letter-spacing: 0.16em;
+    }
+
+    .hero-main {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+      gap: 60px;
+      align-items: center;
+      margin-top: 80px;
+      margin-bottom: 72px;
+    }
+
+    .hero-tag {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.25em;
+      color: var(--accent);
+      margin-bottom: 18px;
+    }
+
+    .hero-name {
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.28em;
+      color: var(--text-muted);
+      margin-bottom: 18px;
+    }
+
+    .hero-title {
+      font-size: clamp(40px, 7.4vw, 64px);
+      line-height: 1.05;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      margin-bottom: 22px;
+    }
+
+    .hero-subtitle {
+      max-width: 420px;
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+
+    .hero-meta {
+      display: grid;
+      gap: 10px;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--text-muted);
+      margin-top: 30px;
+    }
+
+    .meta-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    /* HERO IMAGE */
+
+    .hero-image-card {
+      position: relative;
+      border-radius: 22px;
+      overflow: hidden;
+      min-height: 520px;
+      display: flex;
+      align-items: flex-end;
+      padding: 22px 22px 20px;
+      background: #050609;
+      box-shadow:
+        0 24px 66px rgba(0, 0, 0, 0.95),
+        0 0 0 1px rgba(255,255,255,0.06);
+      isolation: isolate;
+      transform: translate3d(0, calc(var(--scroll-f) * -8px), 0);
+      transition: transform 0.18s ease-out;
+      will-change: transform;
+    }
+
+    .hero-photo {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+      filter: contrast(1.08) brightness(1.02);
+      z-index: 1;
+      transform: scale(calc(1 + var(--scroll-f) * 0.015));
+      transform-origin: center center;
+      transition: transform 0.18s ease-out;
+      will-change: transform;
+    }
+
+    .hero-image-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background:
+        linear-gradient(0deg, rgba(5, 6, 9, 0.8) 0%, rgba(5, 6, 9, 0.0) 60%),
+        linear-gradient(90deg, rgba(5, 6, 9, 0.85) 0, rgba(5, 6, 9, 0.0) 75%),
+        radial-gradient(circle at top, rgba(242,210,113,0.2) 0, transparent 60%);
+      opacity: 0.6;
+    }
+
+    .hero-image-card::after {
+      content: "";
+      position: absolute;
+      inset: 40px;
+      border-radius: 50%;
+      border: 1px solid rgba(242,210,113,0.28);
+      opacity: 0.6;
+      pointer-events: none;
+      mix-blend-mode: screen;
+      box-shadow:
+        0 0 0 1px rgba(0,0,0,0.9),
+        0 0 40px rgba(242,210,113,0.18);
+      z-index: 2;
+    }
+
+    .hero-image-label {
+      position: relative;
+      z-index: 3;
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: var(--text-muted);
+    }
+
+    .hero-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      font-size: 11px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+    }
+
+    .scroll-hint {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .scroll-dot {
+      width: 18px;
+      height: 32px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.18);
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding-top: 5px;
+    }
+
+    .scroll-dot-inner {
+      width: 4px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--accent);
+    }
+
+    .accent-line {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, rgba(242, 210, 113, 0.0), rgba(242, 210, 113, 0.6));
+    }
+
+    /* СЕКЦИИ */
+
+    main {
+      position: relative;
+      z-index: 1;
+      border-top: 1px solid rgba(255,255,255,0.04);
+      background: radial-gradient(circle at bottom, #181927 0, #050609 70%);
+    }
+
+    .section {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 56px 40px 80px;
+    }
+
+    .section-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-size: 20px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+    }
+
+    .section-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+      gap: 40px;
+    }
+
+    .section-text {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.8;
+      max-width: 520px;
+    }
+
+    .info-pairs {
+      display: grid;
+      gap: 14px;
+      font-size: 13px;
+    }
+
+    .info-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--text-muted);
+      margin-bottom: 3px;
+    }
+
+    .info-value {
+      color: var(--text-main);
+    }
+
+    /* SERVICES + WORKS */
+
+    .services {
+      background: radial-gradient(circle at top, rgba(242,210,113,0.12) 0, transparent 55%);
+      border-top: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+      margin-top: 10px;
+    }
+
+    .card {
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.07);
+      background: linear-gradient(135deg, rgba(255,255,255,0.02), rgba(0,0,0,0.7));
+      padding: 16px 16px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      min-height: 150px;
+      transition:
+        border-color 0.35s ease,
+        box-shadow 0.35s ease,
+        background 0.35s ease,
+        transform 0.25s ease;
+      cursor: default;
+    }
+
+    .card:hover {
+      border-color: rgba(242,210,113,0.7);
+      box-shadow:
+        0 0 0 1px rgba(242,210,113,0.24),
+        0 24px 60px rgba(0,0,0,0.85);
+      background: linear-gradient(135deg, var(--accent-soft), rgba(0,0,0,0.92));
+      transform: translateY(-2px);
+    }
+
+    .card-title {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+    }
+
+    .card-text {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+
+    .card-meta {
+      margin-top: auto;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--text-muted);
+    }
+
+    .works {
+      border-top: 1px solid rgba(255,255,255,0.05);
+      background: radial-gradient(circle at top, rgba(255,255,255,0.02) 0, transparent 55%);
+    }
+
+    /* CONTACTS */
+
+    .contacts {
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding-bottom: 40px;
+    }
+
+    .contacts-inner {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 24px;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 14px;
+    }
+
+    .contacts-main {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-width: 460px;
+    }
+
+    .accent-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(242,210,113,0.7);
+      background: rgba(0,0,0,0.65);
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .accent-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: var(--accent);
+    }
+
+    .contacts-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      font-size: 13px;
+    }
+
+    .contacts-links a {
+      color: var(--text-main);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(255,255,255,0.2);
+      padding-bottom: 2px;
+    }
+
+    .contacts-links a:hover {
+      border-color: var(--accent);
+    }
+
+    .footer-micro {
+      margin-top: 16px;
+      font-size: 10px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.22em;
+    }
+
+    /* ============== АДАПТИВ ============== */
+
+    /* планшеты */
+    @media (max-width: 1024px) {
+      .page::after {
+        inset: 40px 24px;
+        border-radius: 24px;
+      }
+
+      .hero {
+        padding: 48px 28px 60px;
+      }
+
+      .section {
+        padding: 44px 28px 64px;
+      }
+
+      .hero-main {
+        gap: 40px;
+        margin-top: 56px;
+        margin-bottom: 56px;
+      }
+
+      .section-grid {
+        grid-template-columns: 1fr;
+        gap: 28px;
+      }
+    }
+
+    /* планшеты и большие телефоны */
+    @media (max-width: 900px) {
+      .hero-main {
+        grid-template-columns: 1fr;
+        gap: 32px;
+        margin-top: 40px;
+        margin-bottom: 48px;
+      }
+
+      .hero-image-card {
+        min-height: 420px;
+      }
+
+      .cards {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-bottom {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+      }
+
+      .meta-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+      }
+    }
+
+    /* мобильные */
+    @media (max-width: 600px) {
+      .page::after {
+        inset: 24px 14px;
+        border-radius: 18px;
+      }
+
+      .hero {
+        padding: 28px 16px 40px;
+        min-height: auto;
+      }
+
+      .hero-top {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+        font-size: 10px;
+      }
+
+      .hero-tag {
+        font-size: 10px;
+        letter-spacing: 0.22em;
+      }
+
+      .hero-name {
+        font-size: 11px;
+        letter-spacing: 0.24em;
+      }
+
+      .hero-title {
+        font-size: 30px;
+        letter-spacing: 0.14em;
+      }
+
+      .hero-subtitle {
+        font-size: 13px;
+      }
+
+      .hero-image-card {
+        min-height: 360px;
+        padding: 14px 14px 14px;
+      }
+
+      .hero-image-label {
+        font-size: 9px;
+        letter-spacing: 0.18em;
+      }
+
+      .section {
+        padding: 28px 16px 44px;
+      }
+
+      .section-title {
+        font-size: 18px;
+        letter-spacing: 0.1em;
+      }
+
+      .section-text {
+        font-size: 13px;
+      }
+
+      .cards {
+        gap: 14px;
+      }
+
+      .card {
+        padding: 14px 14px 16px;
+      }
+
+      .contacts-inner {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 20px;
+      }
+
+      .contacts-links {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+      }
+
+      .page-micro--tl,
+      .page-micro--tr {
+        font-size: 8px;
+        letter-spacing: 0.18em;
+      }
+    }
+
+    /* совсем маленькие экраны */
+    @media (max-width: 420px) {
+      .hero-title {
+        font-size: 26px;
+        letter-spacing: 0.12em;
+      }
+
+      .hero-meta {
+        letter-spacing: 0.12em;
+        font-size: 10px;
+      }
+
+      .hero-image-card {
+        min-height: 320px;
+      }
+
+      .page-micro--tr {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <!-- микро-системные надписи -->
+    <div class="page-micro page-micro--tl">SYS·013 / GAUSS DIVISION</div>
+    <div class="page-micro page-micro--tr">BUILD 2025.01 · NIGHT LAYOUT</div>
+
+    <header class="hero">
+      <div class="hero-top">
+        <div class="hero-logo">
+          <div class="logo-dot"></div>
+          <span>daniil gauss / design</span>
+        </div>
+        <div class="hero-chip">portfolio — 2025</div>
+      </div>
+
+      <div class="hero-main">
+        <div>
+          <p class="hero-tag">visual / ui · graphic design</p>
+          <div class="hero-name">daniil gauss</div>
+          <h1 class="hero-title">calm surface.<br>loud structure.</h1>
+
+          <p class="hero-subtitle">
+            Графический и UX/UI дизайнер. Строю визуальные системы, которые держатся на тишине,
+            воздухе и аккуратно выверенных акцентах. От логотипа до интерфейса — всё подчинено ощущению формы.
+          </p>
+
+          <div class="hero-meta">
+            <div class="meta-row">
+              <span>фокус</span>
+              <span>brand, web, editorial, product</span>
+            </div>
+            <div class="meta-row">
+              <span>подход</span>
+              <span>минимум шума · максимум напряжения</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-image-card">
+          <img src="images/portrait.jpg" alt="Daniil Gauss" class="hero-photo">
+          <div class="hero-image-label">
+            <span>portrait — 01</span>
+            <span>silent frame / gauss</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-bottom">
+        <div class="scroll-hint">
+          <div class="scroll-dot">
+            <div class="scroll-dot-inner"></div>
+          </div>
+          <span>scroll to explore</span>
+        </div>
+        <div class="accent-line"></div>
+        <span>available for collaborations & commissions</span>
+      </div>
+    </header>
+
+    <main>
+      <!-- PROFILE -->
+      <section class="section">
+        <div class="section-label">profile</div>
+        <div class="section-grid">
+          <div>
+            <h2 class="section-title">о себе</h2>
+            <p class="section-text">
+              Классическая художественная школа и скульптура научили меня чувствовать объём, вес и паузы
+              между формами. Сейчас материалом стали пиксели и пользовательский опыт. Я работаю на стыке
+              графического дизайна и интерфейсов: собираю бренды, лендинги и визуальные конструкции,
+              которые выглядят как постер и ведут себя как продукт.
+            </p>
+          </div>
+          <div class="info-pairs">
+            <div>
+              <div class="info-label">специализация</div>
+              <div class="info-value">графический дизайн, ui, визуальные концепции, нейрохудожество</div>
+            </div>
+            <div>
+              <div class="info-label">формат</div>
+              <div class="info-value">фриланс, студийные коллаборации, спецпроекты</div>
+            </div>
+            <div>
+              <div class="info-label">подходит брендам</div>
+              <div class="info-value">fashion, culture, music, tech, lifestyle</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SERVICES -->
+      <section class="section services">
+        <div class="section-label">services</div>
+        <h2 class="section-title">что я делаю</h2>
+
+        <div class="cards">
+          <article class="card">
+            <div class="card-title">web & product screens</div>
+            <div class="card-text">
+              Лендинги и интерфейсы, которые ощущаются как постер: крупная типографика,
+              чистые сетки и точные сценарии. От первого экрана до последней кнопки.
+            </div>
+            <div class="card-meta">stack — figma · ui · ux</div>
+          </article>
+
+          <article class="card">
+            <div class="card-title">visual identity</div>
+            <div class="card-text">
+              Логотип, ритм, цвет и подача. Визуальные системы для брендов, которые хотят выглядеть
+              взрослее и спокойнее, чем рынок вокруг.
+            </div>
+            <div class="card-meta">формат — guideline / key visuals</div>
+          </article>
+
+          <article class="card">
+            <div class="card-title">editorial & poster</div>
+            <div class="card-text">
+              Плакатные серии, афиши, обложки и презентации. Когда нужно собрать событие или релиз
+              в один кадр, который держит внимание.
+            </div>
+            <div class="card-meta">digital & print</div>
+          </article>
+
+          <article class="card">
+            <div class="card-title">ai · neuro visuals</div>
+            <div class="card-text">
+              Работа с Midjourney, Stable Diffusion и 3D как с художественным инструментом:
+              аккуратные гибриды живого и цифрового визуала.
+            </div>
+            <div class="card-meta">research / experiments</div>
+          </article>
+        </div>
+      </section>
+
+      <!-- WORKS -->
+      <section class="section works">
+        <div class="section-label">selected works</div>
+        <h2 class="section-title">несколько проектов</h2>
+
+        <div class="cards">
+          <article class="card">
+            <div class="card-title">campaign · политический брендинг</div>
+            <div class="card-text">
+              Айдентика и визуальная система для предвыборной кампании: логотип, цвет, плакаты,
+              цифровые макеты. Визуал выстроил спокойный, но уверенный образ кандидата.
+            </div>
+            <div class="card-meta">роль — графический дизайнер</div>
+          </article>
+
+          <article class="card">
+            <div class="card-title">youtube · визуальная платформа</div>
+            <div class="card-text">
+              Комплексное оформление YouTube-каналов: обложки, шаблоны для видео и сторис.
+              Цель — собрать каналы в единую систему и усилить узнаваемость.
+            </div>
+            <div class="card-meta">формат — digital-only</div>
+          </article>
+
+          <article class="card">
+            <div class="card-title">cultural venue · афиши и сцена</div>
+            <div class="card-text">
+              Серии афиш, пригласительных и презентационных материалов для дома культуры.
+              Баланс между официальностью и живым визуальным языком.
+            </div>
+            <div class="card-meta">print · presentation</div>
+          </article>
+
+          <article class="card">
+            <div class="card-title">+ more</div>
+            <div class="card-text">
+              Полноформатные кейсы и дополнительные серии работ доступны по запросу или
+              в портфолио на Behance / PDF.
+            </div>
+            <div class="card-meta">details — dm / telegram</div>
+          </article>
+        </div>
+      </section>
+
+      <!-- CONTACTS -->
+      <section class="section contacts">
+        <div class="contacts-inner">
+          <div class="contacts-main">
+            <div class="accent-pill">
+              <div class="accent-dot"></div>
+              <span>let's talk</span>
+            </div>
+            <div style="font-size: 18px; margin-top: 10px;">
+              Открыт к новым проектам и аккуратным экспериментам.
+            </div>
+            <div style="font-size: 13px; color: var(--text-muted);">
+              Интересны лендинги, интерфейсы и визуальные системы, где важны форма, воздух и настроение:
+              релизы, культурные события, бренды на стыке моды и технологий.
+            </div>
+          </div>
+
+          <div>
+            <div class="contacts-links">
+              <a href="mailto:demogorgonbafomet13@gmail.com">
+                demogorgonbafomet13@gmail.com
+              </a>
+              <a href="https://t.me/nichegosmeshnogo777" target="_blank">
+                Telegram
+              </a>
+              <a href="https://www.behance.net/lessrf" target="_blank">
+                Behance
+              </a>
+            </div>
+            <div class="footer-micro">
+              daniil gauss · visual / ui design · 2025
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- параллакс при скролле -->
+  <script>
+    (function () {
+      const root = document.documentElement;
+
+      function updateScrollVar() {
+        const y = window.scrollY || window.pageYOffset || 0;
+        const h = window.innerHeight || 1;
+        const f = Math.min(y / h, 3);
+        root.style.setProperty('--scroll-f', f.toString());
+      }
+
+      updateScrollVar();
+      window.addEventListener('scroll', updateScrollVar, { passive: true });
+      window.addEventListener('resize', updateScrollVar);
+    })();
+  </script>
+</body>
+</html>
